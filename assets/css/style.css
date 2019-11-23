@@ -174,3 +174,11 @@ button{
     margin-top: -20px;
     top: 10px;
 }
+
+@media screen and (max-width: 800px){
+  button{
+    transform: scale(1.4);
+    margin-left: -46px;
+    left: 324px;
+  }
+}
