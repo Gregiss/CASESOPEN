@@ -91,6 +91,8 @@ img{
     top: 20%;
     overflow: auto;
     padding: 20px;
+    left: 50%;
+    transform: translate(-50%);
 }
 
 .cases{
@@ -215,4 +217,5 @@ button{
     height: 40px;
     background: #151515;
     padding: 20px;
+    top: -19px;
 }
