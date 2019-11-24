@@ -200,3 +200,10 @@ button{
     color: #fff;
     top: 305px;
 }
+
+.teste button{
+    top: 0px;
+    left: 0px;
+    margin: 0px;
+    margin-left: 50px;
+}

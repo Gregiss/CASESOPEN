@@ -10,7 +10,7 @@
 </head>
 <body>
         <div id="app">
-        <h1 style="z-index :500; position: fixed;">Seu saldo: R${{ parseFloat(player.saldo).toFixed(2) }} <button v-if="!verItemB" @click="verItem" style="transform: scale(1.4)">Ver meus Itens</button> <button v-if="verItemB" @click="voltarItemB" style="transform: scale(1.4)">Voltar</button></h1>
+        <h1 class="teste" style="z-index :500; position: fixed;">Seu saldo: R${{ parseFloat(player.saldo).toFixed(2) }} <button v-if="!verItemB" @click="verItem" style="transform: scale(1.4)">Ver meus Itens</button> <button v-if="verItemB" @click="voltarItemB" style="transform: scale(1.4)">Voltar</button></h1>
         <div class="scroll" v-if="selectCaixa >= 0">
             <div class="overlay" v-if="possoAbrirCaixa">
                 <button @click="selectCaixa = -1" style="font-size: 9px;">Escolher outra caixa</button>
