@@ -223,7 +223,18 @@ var app = new Vue({
         abriu: false,
         player: {
             saldo: 100
-        }
+        },
+        myItens: [],
+        verItemB : false
+    },
+    mounted(){
+        const myItensDecrypt = CryptoJS.AES.decrypt(localStorage.myItens, "kaway404")
+        const myItensOk = myItensDecrypt.toString(CryptoJS.enc.Utf8);
+        this.myItens = localStorage.myItens ? JSON.parse(myItensOk): []
+        const profileDecrypt = CryptoJS.AES.decrypt(localStorage.profile, "kaway404")
+        const profileOk = profileDecrypt.toString(CryptoJS.enc.Utf8)
+        console.log(profileOk)
+        this.player = localStorage.profile ? JSON.parse(profileOk): {saldo: 100}
     },
     methods:{   
         openCase(){
@@ -254,6 +265,11 @@ var app = new Vue({
             this.itemGanho = this.itemCase[18]
             this.translateX = 0
             this.possoAbrirCaixa = true
+            this.myItens.push(this.itemGanho)
+            const saveLocalStorage = JSON.stringify(this.myItens)
+            localStorage.myItens = CryptoJS.AES.encrypt(saveLocalStorage, "kaway404")
+            const saveProfile = JSON.stringify(this.player)
+            localStorage.profile = CryptoJS.AES.encrypt(saveProfile, "kaway404")
             this.generateItem()
         },
         selectCase(caixa){
@@ -263,6 +279,23 @@ var app = new Vue({
         },
         openAgain(){
             this.abriu = false
+        },
+        verItem(){
+            this.selectCaixa = -1
+            this.verItemB = true
+        },
+        vender(item){
+            this.player.saldo += item.price
+            const id = this.myItens.indexOf(item)
+            this.myItens.splice(id, 1)
+            const saveProfile = JSON.stringify(this.player)
+            localStorage.profile = CryptoJS.AES.encrypt(saveProfile, "kaway404")
+            const saveLocalStorage = JSON.stringify(this.myItens)
+            localStorage.myItens = CryptoJS.AES.encrypt(saveLocalStorage, "kaway404")
+        },
+        voltarItemB(){
+            this.selectCaixa = -1
+            this.verItemB = false
         }
     }
 })
