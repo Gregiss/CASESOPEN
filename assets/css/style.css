@@ -36,7 +36,7 @@ div, button{
 
 .itens{
     width: 290px;
-    display: inline-block;
+    display: inline-table;
     background: #5555;
     position: relative;
     top: -15px;
