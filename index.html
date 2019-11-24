@@ -1,219 +1,76 @@
-body{
-    background: #151515;
-    color: #fff;
-    font-family: Arial, Helvetica, sans-serif;
-}
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <title>Cases open</title>
+</head>
+<body>
+         <div id="app">
+        <h1 class="teste" style="z-index :500; position: fixed;">Seu saldo: R${{ parseFloat(player.saldo).toFixed(2) }} <button v-if="!verItemB" @click="verItem" style="transform: scale(1.4)">Ver meus Itens</button> <button v-if="verItemB" @click="voltarItemB" style="transform: scale(1.4)">Voltar</button></h1>
+        <div class="scroll" v-if="selectCaixa >= 0">
+            <div class="overlay" v-if="possoAbrirCaixa">
+                <button @click="selectCaixa = -1" style="font-size: 9px;">Escolher outra caixa</button>
+                <button @click="openCase" style="font-size: 9px;">Abrir caixa por R${{ cases[selectCaixa].price }}</button>
+            </div>
+            
+            <div class="trans" v-bind:style="{transform: 'translateX(-' + translateX + 'px)'}">
+            <div class="itens"
+             v-for="item in itemCase"
+             v-bind:style="{border: '4px solid var(--color'+ item.rarity + ')'}"
+             >
+             <img :src="item.image">
+             <div class="bottom" v-bind:style="{background: 'var(--color'+ item.rarity + ')'}">
+                <p>R${{ item.price }}</p>
+            </div>
+            </div>
+        </div>
 
-#app{
-    padding: 20px;
-}
+        <div class="gained" v-if="abriu">
+            <button @click="openAgain" style="transform: scale(1); top: 54px; ">Abrir outra caixa</button>
+            <div class="itens" v-bind:style="{border: '4px solid var(--color'+ itemGanho.rarity + ')'}">
+                <img :src="itemGanho.image">
+                <div class="bottom"
+                v-bind:style="{background: 'var(--color'+ itemGanho.rarity + ')'}">
+                    <p>{{ itemGanho.name }}</p>
+                    <p>R${{ itemGanho.price }}</p>
+                </div>
+            </div>
+        </div>
 
-@keyframes opacity {
-    from { opacity: 0;}
-    to { opacity: 1;}
-}
+        </div>
 
-div, button{
-    animation-name: mymove;
+        <div class="cases_i" v-if="selectCaixa < 0 && !verItemB">
+            <h1>Qual caixa você quer abrir?</h1>
+            <div class="cases"
+            v-for="caixa in cases"
+            @click="selectCase(caixa)">
+                <img :src="caixa.image">
+            </div>
+        </div>
 
-    /* OR using the animation shorthand property */
-    animation: opacity 0.4s;
-}
+        <div class="cases_i itensb" v-if="verItemB">
+            <h1>Seus itens</h1>
+            <h2 v-if="myItens.length == 0"> Você não tem nenhum item</h2>
+            <div class="itens" v-for="itemGanho in myItens" v-bind:style="{border: '4px solid var(--color'+ itemGanho.rarity + ')'}">
+                <div class="hover">
+                    <button @click="vender(itemGanho)">Vender R${{itemGanho.price}}</button>
+                </div>
+                <img :src="itemGanho.image">
+                <div class="bottom"
+                v-bind:style="{background: 'var(--color'+ itemGanho.rarity + ')'}">
+                    <p>{{ itemGanho.name }}</p>
+                    <p>R${{ itemGanho.price }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="./assets/js/index.js"></script>
 
-.scroll{
-    position: fixed;
-    width: 800px;
-    height: 300px;
-    background: #000;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    overflow-x: hidden;
-    white-space: nowrap;
-    overflow-y: hidden;
-    padding: 20px;
-}
-
-.itens{
-    width: 290px;
-    display: inline-table;
-    background: #5555;
-    position: relative;
-    top: -15px;
-    border: 4px solid red;
-    margin: -42px;
-    transform: scale(0.7);
-}
-
-:root{
-    --color1: rgb(75, 105, 255);
-    --color2: rgb(136, 71, 255);
-    --color3: rgb(211, 44, 230);
-    --color4: rgb(235, 75, 75);
-    --color5: rgb(255, 215, 0);
-}
-
-img{
-    width: 100%;
-    height: 100%;
-    background: #212220;
-}
-
-.itens .bottom{
-    background: transparent;
-    position: relative;
-    width: 100%;
-    height: 100px;
-    bottom: 0px;
-    z-index: 10;
-}
-
-.trans{
-    transition: 3s;
-}
-
-.scroll::after{
-    content: '';
-    position: absolute;
-    width: 10px;
-    background: #ffffff;
-    height: 100%;
-    left: 50%;
-    top: 0%;
-    box-shadow: 2px 1px 3px rgba(0,0,0,.40);
-}
-
-.cases_i{
-    position: absolute;
-    width: 100%;
-    height: auto;
-    max-width: 800px;
-    top: 20%;
-    overflow: auto;
-    padding: 20px;
-}
-
-.cases{
-    width: 200px;
-    height: 200px;
-    padding: 0px;
-    border: 2px solid #fff;
-    cursor: pointer;
-    display: inline-block;
-    margin: 20px;
-}
-
-button{
-    position: relative;
-    margin: 0px;
-    padding: 0px;
-    outline: none;
-    cursor: pointer;
-    padding: 10px;
-    margin: -20px 120px;
-    z-index: 200;
-    top: 150px;
-    background: var(--color1);
-    color: #fff;
-    border: none;
-    transform: scale(3);
-    left: 80px;
-}
-
-.overlay{
-    background: rgba(0,0,0,.80);
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    z-index: 5000;
-}
-
-.gained{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5000;
-    background: #000;
-    top: 0px;
-    left: 0px;
-}
-
-.gained .itens{
-    position: absolute;
-    top: 65%;
-    left: 56%;
-    transform: translate(-50%, -50%) scale(0.7);
-}
-
-.gained p{
-    position: relative;
-    margin: 20px;
-    margin-left: 5px;
-    font-size: 22px;
-    top: 10px;
-    left: 5px;
-    padding: 0px;
-    text-shadow: 1px 2px 1px rgba(0,0,0,.80);
-    white-space: normal;
-    margin-top: -20px;
-    top: 10px;
-}
-
-.itens .bottom p{
-    position: relative;
-    margin: 20px;
-    margin-left: 5px;
-    font-size: 22px;
-    top: 10px;
-    left: 5px;
-    padding: 0px;
-    text-shadow: 1px 2px 1px rgba(0,0,0,.80);
-    white-space: normal;
-    margin-top: -20px;
-    top: 10px;
-}
-
-@media screen and (max-width: 800px){
-  button{
-    transform: scale(1.4);
-    margin-left: -46px;
-    left: 324px;
-  }
-}
-
-.hover{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 5000;
-    background: rgba(0,0,0,.60);
-}
-
-.hover button{
-    transform: scale(1.5);
-    position: relative;
-    background: #000;
-    color: #fff;
-    top: 305px;
-    left: 49px;
-    margin: 0px;
-}
-
-.teste button{
-    top: 0px;
-    left: 0px;
-    margin: 0px;
-    margin-left: 50px;
-}
-
-.teste{
-    z-index: 500;
-    position: fixed;
-    width: 100%;
-    height: 40px;
-    background: #151515;
-    padding: 20px;
-    top: -19px;
-}
+</body>
+</html>
